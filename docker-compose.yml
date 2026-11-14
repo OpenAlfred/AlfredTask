@@ -50,6 +50,8 @@ services:
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?Set BETTER_AUTH_SECRET in .env}
       BETTER_AUTH_TRUSTED_ORIGINS: ${BETTER_AUTH_TRUSTED_ORIGINS:-}
       DISABLE_SIGNUP: ${DISABLE_SIGNUP:-false}
+      # Shared with AlfredDashboard for single sign-on. Empty turns it off.
+      OPENALFRED_SSO_SECRET: ${OPENALFRED_SSO_SECRET:-}
     depends_on:
       migrate:
         condition: service_completed_successfully

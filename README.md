@@ -53,6 +53,7 @@ Everything is read from `.env` (see `.env.example`):
 | `BETTER_AUTH_SECRET` | Signs sessions. At least 32 characters. |
 | `BETTER_AUTH_TRUSTED_ORIGINS` | More origins that may use the app, comma-separated. Optional. |
 | `DISABLE_SIGNUP` | `true` closes registration. |
+| `OPENALFRED_SSO_SECRET` | Shared with AlfredDashboard for single sign-on. Optional, see below. |
 | `APP_BIND`, `APP_PORT` | Host address and port of the app. |
 | `CADDY_BIND`, `CADDY_HTTP_PORT`, `CADDY_HTTPS_PORT`, `APP_DOMAIN` | Only for `docker compose --profile https`. |
 
@@ -80,12 +81,21 @@ The endpoint is stateless Streamable HTTP and serves the 2025 and 2026 revisions
 Clients that connect from the cloud, such as claude.ai, can't reach a server that is only available
 over a VPN. See [docs/SELF_HOSTING.md](docs/SELF_HOSTING.md) for the details.
 
+## Single sign-on from AlfredDashboard
+
+AlfredDashboard can open the app with its user already signed in. Set `OPENALFRED_SSO_SECRET` to the
+same value in both apps and point the dashboard's AlfredTask connection at `BETTER_AUTH_URL`. The
+dashboard then sends the user to `/api/sso/callback` with a signed token that is valid for two
+minutes. The app signs in the account with the same email address and creates it if there is none,
+even with `DISABLE_SIGNUP=true`. Without the variable the endpoint answers 503.
+
 ## Differences from upstream
 
 - Better Auth with email and password replaces Supabase Auth. There is no OAuth or magic link.
 - Prisma talks to a plain PostgreSQL. The `User`, `Session`, `Account` and `Verification` tables belong
   to Better Auth.
 - An MCP server with personal API tokens, see above.
+- Single sign-on from AlfredDashboard, see above.
 - A redesigned interface with a sidebar and dark mode.
 - No Google Analytics and no marketing pages: `/` opens the app.
 

@@ -360,6 +360,30 @@ endgültig. Für erledigte Tasks ist `complete_task` die bessere Wahl.
   `BETTER_AUTH_TRUSTED_ORIGINS`.
 - Ein Token sieht und ändert nur die Projekte und Tasks seines Besitzers.
 
+## 8. Anmeldung über AlfredDashboard
+
+AlfredDashboard kann die App mit einem Klick öffnen, ohne dass du dich noch einmal anmeldest. Dafür
+brauchen beide dasselbe Geheimnis:
+
+1. Kopiere den Wert von `OPENALFRED_SSO_SECRET` aus der `.env` des Dashboards in die `.env` der App
+   und starte sie neu (`docker compose up -d`).
+2. Trage im Dashboard bei der Verbindung zu AlfredTask genau die Adresse aus `BETTER_AUTH_URL` ein.
+
+Das Dashboard schickt dich dann mit einem signierten Token, der zwei Minuten gilt, an
+`/api/sso/callback`. Die App meldet das Konto mit derselben E-Mail-Adresse an. Gibt es keins, legt
+sie eins an, auch wenn `DISABLE_SIGNUP=true` die Registrierung schließt: Wer sich im Dashboard
+anmelden kann, kommt also auch hier hinein. Ohne `OPENALFRED_SSO_SECRET` antwortet der Endpunkt mit
+503.
+
+Läuft das Dashboard in einem Tailnet, gib die App dort ebenfalls frei, zum Beispiel auf Port 3000:
+
+```bash
+sudo tailscale serve --bg --https=3000 http://127.0.0.1:3000
+```
+
+`BETTER_AUTH_URL` ist dann `https://<rechner>.<tailnet>.ts.net:3000`. Erreichst du die App weiter
+unter einer zweiten Adresse, etwa im Heimnetz, gehört diese nach `BETTER_AUTH_TRUSTED_ORIGINS`.
+
 ## Fehlersuche
 
 | Problem | Was du prüfst |
@@ -372,6 +396,7 @@ endgültig. Für erledigte Tasks ist `complete_task` die bessere Wahl.
 | Port schon belegt | `APP_PORT`, `DB_PORT`, `CADDY_HTTP_PORT` oder `CADDY_HTTPS_PORT` in `.env` ändern. |
 | MCP antwortet mit 401 | Der Token ist falsch, widerrufen oder abgelaufen. Lege in den Einstellungen einen neuen an. |
 | MCP antwortet mit 403 | Die Anfrage hat einen `Origin`-Header, der nicht zu `BETTER_AUTH_URL` oder `BETTER_AUTH_TRUSTED_ORIGINS` passt. MCP-Clients senden keinen, Browser immer. |
+| Der Klick im Dashboard endet mit einem Fehler oder auf der Login-Seite | 503: `OPENALFRED_SSO_SECRET` fehlt. 401: Der Wert weicht von dem im Dashboard ab, oder die Uhr des Servers geht falsch. Login-Seite: Das Dashboard öffnet eine andere Adresse als `BETTER_AUTH_URL` (Abschnitt 8). |
 | Claude Code meldet bei HTTPS einen Zertifikatsfehler | Bei Variante A: `NODE_EXTRA_CA_CERTS` auf Caddys Root-Zertifikat setzen (Abschnitt 7). |
 | Der Build bricht mit „Temporary failure resolving“ ab | Die Container erreichen den DNS-Server des Servers nicht. Siehe „Build ohne DNS“ unten. |
 | Caddy startet nicht, „address already in use“ | Ein anderer Dienst belegt den Port. Setz `CADDY_HTTPS_PORT` und `CADDY_HTTP_PORT` auf freie Ports (Abschnitt 4). |
