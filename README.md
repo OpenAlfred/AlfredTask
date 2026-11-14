@@ -89,6 +89,10 @@ dashboard then sends the user to `/api/sso/callback` with a signed token that is
 minutes. The app signs in the account with the same email address and creates it if there is none,
 even with `DISABLE_SIGNUP=true`. Without the variable the endpoint answers 503.
 
+The session cookie is named `alfredtask.session_token` instead of Better Auth's default. Browsers share
+cookies across the ports of one host, so with the default name a sign-in here would sign you out of a
+dashboard running on the same host.
+
 ## Differences from upstream
 
 - Better Auth with email and password replaces Supabase Auth. There is no OAuth or magic link.

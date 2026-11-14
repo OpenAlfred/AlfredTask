@@ -375,6 +375,11 @@ sie eins an, auch wenn `DISABLE_SIGNUP=true` die Registrierung schließt: Wer si
 anmelden kann, kommt also auch hier hinein. Ohne `OPENALFRED_SSO_SECRET` antwortet der Endpunkt mit
 503.
 
+Das Sitzungs-Cookie der App heißt `alfredtask.session_token` (über HTTPS mit `__Secure-` davor), nicht
+wie bei Better Auth üblich `better-auth.session_token`. Browser trennen Cookies nicht nach Port: Läuft das
+Dashboard auf demselben Rechner, würde eine Anmeldung hier sonst seine Sitzung ersetzen und dich dort
+abmelden.
+
 Läuft das Dashboard in einem Tailnet, gib die App dort ebenfalls frei, zum Beispiel auf Port 3000:
 
 ```bash

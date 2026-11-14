@@ -23,11 +23,19 @@ const createAuth = () =>
     user: {
       additionalFields: { timeZone: { type: 'string', required: false, input: false } },
     },
-    /*
-     * The id columns are UUIDs without a database default. With the "uuid" option Better Auth
-     * leaves the generation to PostgreSQL, so it has to be a function to generate them itself.
-     */
-    advanced: { database: { generateId: () => crypto.randomUUID() } },
+    advanced: {
+      /*
+       * Browsers share cookies across the ports of one host. AlfredDashboard and AlfredCosts can
+       * run on the same host and use Better Auth's default cookie names, so with those a sign-in
+       * here would replace their session cookie and sign the user out there.
+       */
+      cookiePrefix: 'alfredtask',
+      /*
+       * The id columns are UUIDs without a database default. With the "uuid" option Better Auth
+       * leaves the generation to PostgreSQL, so it has to be a function to generate them itself.
+       */
+      database: { generateId: () => crypto.randomUUID() },
+    },
     // The origin of BETTER_AUTH_URL is always trusted. Add more as a comma-separated list.
     trustedOrigins: (process.env.BETTER_AUTH_TRUSTED_ORIGINS ?? '')
       .split(',')
