@@ -93,13 +93,18 @@ The session cookie is named `alfredtask.session_token` instead of Better Auth's 
 cookies across the ports of one host, so with the default name a sign-in here would sign you out of a
 dashboard running on the same host.
 
+In the dashboard's frame the app leaves out its sidebar and header, since the dashboard shows its own,
+and puts Today, Projects and the active projects in tabs at the top, like AlfredCosts. The page checks
+for itself whether it is framed, so opened on its own, in a new tab or as an installed app, it keeps
+its sidebar. Settings and API tokens are there; the dashboard links to the app in a new tab.
+
 ## Differences from upstream
 
 - Better Auth with email and password replaces Supabase Auth. There is no OAuth or magic link.
 - Prisma talks to a plain PostgreSQL. The `User`, `Session`, `Account` and `Verification` tables belong
   to Better Auth.
 - An MCP server with personal API tokens, see above.
-- Single sign-on from AlfredDashboard, see above.
+- Single sign-on from AlfredDashboard and tabs instead of the sidebar in its frame, see above.
 - A redesigned interface with a sidebar and dark mode.
 - No Google Analytics and no marketing pages: `/` opens the app.
 

@@ -4,6 +4,8 @@
  */
 const color = (name) => `rgb(var(--${name}) / <alpha-value>)`;
 
+const plugin = require('tailwindcss/plugin');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -36,5 +38,13 @@ module.exports = {
       },
     },
   },
-  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
+  plugins: [
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/typography'),
+    /*
+     * "embedded:" applies while the app runs in another page's frame, such as AlfredDashboard's.
+     * The script in src/app/layout.tsx sets data-embedded on <html> before the body is drawn.
+     */
+    plugin(({ addVariant }) => addVariant('embedded', 'html[data-embedded] &')),
+  ],
 };

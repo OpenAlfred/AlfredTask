@@ -124,10 +124,22 @@ export const metadata: Metadata = {
 
 const inter = Inter({ subsets: ['latin'] });
 
+/*
+ * In another page's frame, such as AlfredDashboard's, the app leaves out its own sidebar and header
+ * (the "embedded:" variant in tailwind.config.js). The page checks this for itself instead of
+ * relying on a cookie from the dashboard, which would stay set when the app is opened on its own,
+ * in a new tab or as an installed app. The script runs before the body is drawn, so the sidebar
+ * never flashes; suppressHydrationWarning lets React accept the attribute it didn't render.
+ */
+const markEmbeddedScript =
+  "try{if(window.self!==window.top)document.documentElement.setAttribute('data-embedded','')}" +
+  "catch(e){document.documentElement.setAttribute('data-embedded','')}";
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="h-full antialiased">
+    <html lang="en" className="h-full antialiased" suppressHydrationWarning>
       <body className={`${inter.className} flex flex-col h-full`}>
+        <script dangerouslySetInnerHTML={{ __html: markEmbeddedScript }} />
         <InstallPwaProvider>{children}</InstallPwaProvider>
       </body>
     </html>

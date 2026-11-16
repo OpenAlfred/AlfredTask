@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import { EmbeddedTopNav } from '@/features/app/shared/ui/EmbeddedTopNav';
 import { Header } from '@/features/app/shared/ui/Header';
 import { Sidebar } from '@/features/app/shared/ui/Sidebar';
 import { InstallPwaDialog } from '@/features/shared/ui/pwa/InstallPwaDialog';
@@ -25,11 +26,16 @@ export default async function AppLayout({
   if (!isAuthenticated) redirect('/auth/sign-in');
   /**/
 
+  /*
+   * In AlfredDashboard's frame the dashboard already shows its own sidebar with the account, so
+   * the app swaps its sidebar and header for tabs at the top, like AlfredCosts does.
+   */
   return (
     <div className="flex h-full overflow-hidden bg-background">
-      <Sidebar className="hidden md:flex" />
+      <Sidebar className="hidden md:flex embedded:hidden" />
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
-        <Header className="md:hidden" />
+        <Header className="md:hidden embedded:hidden" />
+        <EmbeddedTopNav className="hidden embedded:flex" />
         <main className="flex-1 overflow-y-auto overflow-x-hidden [scrollbar-gutter:stable]">
           <div className="mx-auto flex w-full max-w-3xl flex-col px-4 pb-24 sm:px-8">
             {children}

@@ -17,6 +17,8 @@ export const InstallPwaDialog = () => {
 
   useEffect(() => {
     if (!window || !localStorage) return;
+    // In another page's frame, such as AlfredDashboard's, the home screen would get that page.
+    if (window.self !== window.top) return;
 
     const parser = new UAParser(window.navigator.userAgent);
     const browser = parser.getBrowser().name;

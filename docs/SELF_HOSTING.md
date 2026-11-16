@@ -380,6 +380,12 @@ wie bei Better Auth üblich `better-auth.session_token`. Browser trennen Cookies
 Dashboard auf demselben Rechner, würde eine Anmeldung hier sonst seine Sitzung ersetzen und dich dort
 abmelden.
 
+Im Rahmen des Dashboards lässt die App ihre Seitenleiste und Kopfzeile weg, weil das Dashboard seine
+eigene zeigt, und führt Today, Projects und die aktiven Projekte als Reiter oben, wie AlfredCosts. Ob
+sie in einem Rahmen läuft, prüft die Seite selbst: Allein geöffnet, in einem neuen Tab oder als
+installierte App behält sie ihre Seitenleiste. Dort liegen auch die Einstellungen und API-Tokens; im
+Dashboard kommst du über „In neuem Tab öffnen“ hin.
+
 Läuft das Dashboard in einem Tailnet, gib die App dort ebenfalls frei, zum Beispiel auf Port 3000:
 
 ```bash
